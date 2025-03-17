@@ -1,8 +1,12 @@
 
 # initialize the Flask app
-from flask import Flask, request, jsonify
+from flask import Flask
 app = Flask(__name__)
 
+# define a route for the default URL
+@app.route('/')
+def hello():
+    return "Hello World!"
 
 
 if __name__ == '__main__':
