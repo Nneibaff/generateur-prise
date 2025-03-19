@@ -1,149 +1,156 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Container, Row, Col, Card, Spinner, Button, Form } from 'react-bootstrap';
-import './App.css';  // Pour les styles personnalisés (si nécessaire)
+import { Container, Row, Col, Card, Spinner, Button, ListGroup, Badge, Alert } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';  // Styles personnalisés si nécessaire
 
 function App() {
-  const [config, setConfig] = useState(null);
-  const [selectedType, setSelectedType] = useState('');
-  const [selectedColor, setSelectedColor] = useState('');
-  const [previewImage, setPreviewImage] = useState('');
+  
   const [formats, setFormats] = useState([]);
+  const [selectedFormat, setSelectedFormat] = useState('');
+  const [equipements, setEquipements] = useState([]);
+  const [selectedEquipement, setSelectedEquipement] = useState('');
+  const [previewImage, setPreviewImage] = useState('');
+  const [error, setError] = useState('');
+  const [showEquipements, setShowEquipements] = useState(false);
+  const [showFormats, setShowFormats] = useState(false);
 
-  useEffect(() => {
-    axios.get("http://localhost:5000/api/config") // Vérifie que c'est bien /api/config
-      .then(response => {
-        setConfig(response.data);
-        setSelectedType(response.data.type[0]);  // Définir un type par défaut
-        setSelectedColor(response.data.color[0]); // Définir une couleur par défaut
-      })
-      .catch(error => console.error("Erreur lors de la requête:", error));
-  }, []);
+ 
 
   useEffect(() => {
     axios.get("http://localhost:5000/api/formats")
-      .then(response => {
-        setFormats(response.data);
-      })
-      .catch(error => {
-        console.error("Erreur lors de la récupération des formats:", error);
-      });
+      .then(response => setFormats(response.data))
+      .catch(() => setError("Erreur lors de la récupération des équipements."));
   }, []);
 
-  // Gérer les changements de sélection
-  const handleTypeChange = (event) => {
-    setSelectedType(event.target.value);
-  };
-
-  const handleColorChange = (event) => {
-    setSelectedColor(event.target.value);
-  };
-
-  // Mettre à jour l'image de prévisualisation (ajuster selon les besoins)
   useEffect(() => {
-    if (selectedType && selectedColor) {
-      setPreviewImage(`/images/${selectedType}_${selectedColor}.png`); // Ex: image "type_couleur.png"
+    if (selectedEquipement && selectedFormat) {
+      setPreviewImage(`/images/${selectedEquipement}_${selectedFormat}.png`);
     }
-  }, [selectedType, selectedColor]);
+  }, [selectedEquipement, selectedFormat]);
 
+
+  useEffect(() => {
+    axios.get("http://localhost:5000/api/equipements")
+      .then(response => {
+        const uniqueEquipements = [];
+        response.data.forEach(equipement => {
+          if (!uniqueEquipements.some(m => m['NomEquipement'] === equipement['NomEquipement'])) {
+            uniqueEquipements.push(equipement);
+          }
+        });
+        setEquipements(uniqueEquipements);
+      })
+      .catch(() => setError("Erreur lors de la récupération des équipements."));
+  }, []);
   return (
-    <Container fluid className="mt-5">
-      <Container className="header-container">
-        <h1 className="text-center mb-4">Configurateur de Prises</h1>
-      </Container>
+    <Container className="mt-5">
+      <h1 className="text-center mb-4"> Configurateur de Prises</h1>
+
+      {/* Affichage des erreurs */}
+      {error && <Alert variant="danger">{error}</Alert>}
 
       <Row>
-        {/* Colonne de gauche pour les options */}
-        <Col md={4} className="config-sidebar">
-          {config ? (
-            <>
-              <Card className="mb-4">
-                <Card.Body>
-                  <Card.Title>Types disponibles :</Card.Title>
-                  <Form>
-                    {config.type.map((type, index) => (
-                      <Form.Check
-                        type="radio"
-                        id={`type-${index}`}
-                        label={type}
-                        name="type"
-                        value={type}
-                        checked={selectedType === type}
-                        onChange={handleTypeChange}
-                        key={index}
-                      />
-                    ))}
-                  </Form>
-                </Card.Body>
-              </Card>
+        
+        {/* Sidebar : Choix des équipements */}
+        <Col md={4}>
+        {/* Bouton pour afficher/masquer la liste des équipements */}
+        <Button 
+          variant="primary" 
+          className="mb-3" 
+          onClick={() => {
+            setShowEquipements(!showEquipements);
+            setShowFormats(false);
+          }}
+        >
+          {showEquipements ? "Masquer les équipements" : "Voir les équipements"}
+        </Button>
 
-              <Card>
-                <Card.Body>
-                  <Card.Title>Couleurs disponibles :</Card.Title>
-                  <Form>
-                    {config.color.map((color, index) => (
-                      <Form.Check
-                        type="radio"
-                        id={`color-${index}`}
-                        label={color}
-                        name="color"
-                        value={color}
-                        checked={selectedColor === color}
-                        onChange={handleColorChange}
-                        key={index}
-                      />
-                    ))}
-                  </Form>
-                </Card.Body>
-              </Card>
+        {/* Bouton pour afficher/masquer la liste des formats */}
+        <Button 
+          variant="primary" 
+          className="mb-3" 
+          onClick={() => {
+            setShowFormats(!showFormats);
+            setShowEquipements(false);
+          }}
+        >
+          {showFormats ? "Masquer les formats" : "Voir les formats"}
+        </Button>
 
-              <Card className="mb-4">
-                <Card.Body>
-                  <Card.Title>Formats disponibles :</Card.Title>
-                  <Form.Select>
-                    <option value="">Sélectionnez un format</option>
-                    {formats.map((format, index) => (
-                      <option 
-                        key={index} 
-                        value={`${format['types formats']} - ${format.Item}`}>
-                        {format['types formats']} - {format.Item}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Card.Body>
-              </Card>
-            </>
-          ) : (
-            <div className="text-center mt-5">
-              <Spinner animation="border" role="status">
-                <span className="visually-hidden">Chargement...</span>
-              </Spinner>
-            </div>
-          )}
-        </Col>
+        {/* Affichage conditionnel de la liste des équipements ou des formats */}
+        {(showEquipements || showFormats) && (
+          <Card className="mb-3 shadow-sm">
+            <Card.Body>
+              <Card.Title className="text-center">
+                {showEquipements ? "Equipements disponibles" : "Formats disponibles"}
+              </Card.Title>
+              <ListGroup style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                {showEquipements && equipements.map((equipement, index) => (
+                  <ListGroup.Item 
+                    key={index} 
+                    action 
+                    active={selectedEquipement === equipement['NomEquipement']}
+                    onClick={() => setSelectedEquipement(equipement['NomEquipement'])}
+                  >
+                    {equipement['NomEquipement']}
+                  </ListGroup.Item>
+                ))}
+                {showFormats && formats.map((format, index) => (
+                  <ListGroup.Item 
+                    key={index} 
+                    action 
+                    active={selectedFormat === `${format['TypeFormat']} - ${format.Item}`}
+                    onClick={() => setSelectedFormat(`${format['TypeFormat']} - ${format.Item}`)}
+                  >
+                    {format['TypeFormat']} - {format.Item}
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            </Card.Body>
+          </Card>
+        )}
+      </Col>
 
-        {/* Colonne de droite pour la prévisualisation */}
-        <Col md={8} className="config-preview">
-          {previewImage ? (
-            <Card>
-              <Card.Body className="text-center">
-                <Card.Title>Prévisualisation</Card.Title>
-                <img src={previewImage} alt="Prise Configurée" className="img-fluid" />
-              </Card.Body>
-            </Card>
-          ) : (
-            <div className="text-center mt-5">
-              <Spinner animation="border" role="status">
-                <span className="visually-hidden">Chargement...</span>
-              </Spinner>
-            </div>
-          )}
+        {/* Zone de prévisualisation */}
+        <Col md={8} className="text-center">
+          <Card className="shadow-sm">
+            <Card.Body>
+              <Card.Title> Prévisualisation</Card.Title>
+              
+              {previewImage ? (
+                <img 
+                  src={previewImage} 
+                  alt="Prise Configurée" 
+                  className="img-fluid fade-in"
+                  style={{ maxWidth: "70%", borderRadius: "10px" }}
+                />
+              ) : (
+                <div className="mt-3">
+                  <Spinner animation="border" variant="primary" />
+                  <p className="mt-2">Sélectionnez un modèle et un format</p>
+                </div>
+              )}
+
+              {/* Badges affichant la sélection */}
+              <div className="mt-3">
+                {selectedEquipement && <Badge bg="info" className="me-2">{selectedEquipement}</Badge>}
+                {selectedFormat && <Badge bg="secondary">{selectedFormat}</Badge>}
+              </div>
+            </Card.Body>
+          </Card>
+
+          {/* Bouton Ajouter au panier */}
+          <div className="mt-4">
+            <Button 
+              variant="success" 
+              disabled={!selectedEquipement || !selectedFormat}
+            >
+               Ajouter au panier
+            </Button>
+          </div>
         </Col>
       </Row>
-
-      <div className="text-center mt-4">
-        <Button variant="primary">Ajouter au panier</Button>
-      </div>
     </Container>
   );
 }
