@@ -1,0 +1,32 @@
+.config-sidebar {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .config-preview {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+  
+  h1 {
+    font-family: 'Arial', sans-serif;
+    color: #343a40;
+  }
+  
+  button {
+    margin-top: 20px;
+  }
+
+  .header-container {
+    background-color: #e9ecef;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
