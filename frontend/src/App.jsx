@@ -6,6 +6,8 @@ import './App.css';  // Styles personnalisés si nécessaire
 
 function App() {
   
+  const [modeles, setModeles] = useState([]);
+  const [selectedModele, setSelectedModele] = useState('');
   const [formats, setFormats] = useState([]);
   const [selectedFormat, setSelectedFormat] = useState('');
   const [finitions, setFinitions] = useState([]);
@@ -17,14 +19,28 @@ function App() {
   const [showEquipements, setShowEquipements] = useState(false);
   const [showFormats, setShowFormats] = useState(false);
   const [showFinitions, setShowFinitions] = useState(false);
+  const [showModeles, setShowModeles] = useState(false);
  
+
+  useEffect(() => {
+    axios.get("http://localhost:5000/api/modeles")
+    .then(response => {
+      const uniqueModeles = [];
+      response.data.forEach(modele => {
+        if (!uniqueModeles.some(m => m['NomModele'] === modele['NomModele'])) {
+          uniqueModeles.push(modele);
+        }
+      });
+      setModeles(uniqueModeles);
+    })
+    .catch(() => setError("Erreur lors de la récupération des modeles."));
+  }, []);
 
   useEffect(() => {
     axios.get("http://localhost:5000/api/formats")
       .then(response => setFormats(response.data))
       .catch(() => setError("Erreur lors de la récupération des formats."));
   }, []);
-
 
   useEffect(() => {
     axios.get("http://localhost:5000/api/finitions")
@@ -39,7 +55,6 @@ function App() {
       })
       .catch(() => setError("Erreur lors de la récupération des finitions."));
   }, []);
-
 
   useEffect(() => {
     axios.get("http://localhost:5000/api/equipements")
@@ -95,9 +110,22 @@ function App() {
                 variant="outline-primary"
                 className="w-100 mb-2"
                 onClick={() => {
-                  setShowFormats(!showFormats);
+                  setShowModeles(!showModeles);
+                  setShowFormats(false);
                   setShowEquipements(false);
                   setShowFinitions(false);
+                }}
+              >
+                {showModeles ? "Masquer les modèles" : "Voir les modèles"}
+              </Button>
+              <Button
+                variant="outline-primary"
+                className="w-100 mb-2"
+                onClick={() => {
+                  setShowModeles(false);
+                  setShowFormats(!showFormats);                  
+                  setShowFinitions(false);
+                  setShowEquipements(false);
                 }}
               >
                 {showFormats ? "Masquer les formats" : "Voir les formats"}
@@ -106,9 +134,10 @@ function App() {
                 variant="outline-primary"
                 className="w-100"
                 onClick={() => {
+                  setShowModeles(false);
+                  setShowFormats(false);          
                   setShowFinitions(!showFinitions);
                   setShowEquipements(false);
-                  setShowFormats(false);
                 }}
               >
                 {showFinitions ? "Masquer les finitions" : "Voir les finitions"}
@@ -117,9 +146,10 @@ function App() {
                 variant="outline-primary"
                 className="w-100 mb-2"
                 onClick={() => {
-                  setShowEquipements(!showEquipements);
+                  setShowModeles(false);
                   setShowFormats(false);
                   setShowFinitions(false);
+                  setShowEquipements(!showEquipements);
                 }}
               >
                 {showEquipements ? "Masquer les équipements" : "Voir les équipements"}
@@ -128,17 +158,31 @@ function App() {
           </Card>
 
           {/* Affichage conditionnel des listes */}
-          {(showFormats || showFinitions || showEquipements) && (
+          {(showModeles || showFormats || showFinitions || showEquipements) && (
             <Card className="shadow-sm">
               <Card.Body>
                 <Card.Title className="text-center">
-                  {showEquipements
+                  {showModeles
+                    ? "Modèles disponibles"
+                    : showEquipements
                     ? "Equipements disponibles"
                     : showFormats
                     ? "Formats disponibles"
-                    : "Finitions disponibles"}
+                    : "Finitions disponibles"
+                  }
                 </Card.Title> 
                 <ListGroup style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                {showModeles &&
+                    modeles.map((modele, index) => (
+                      <ListGroup.Item
+                        key={index}
+                        action
+                        active={selectedModele === modele['NomModele']}
+                        onClick={() => setSelectedModele(modele['NomModele'])}
+                      >
+                        {modele['NomModele']}
+                      </ListGroup.Item>
+                    ))}
                   {showFormats &&
                     formats.map((format, index) => (
                       <ListGroup.Item
@@ -196,21 +240,22 @@ function App() {
               ) : (
                 <div className="mt-3">
                   <Spinner animation="border" variant="primary" />
-                  <p className="mt-2">Sélectionnez des équipements, un format, une finition</p>
+                  <p className="mt-2">Sélectionnez un modele, un format, une finition, des équipements</p>
                 </div>
               )}
 
               {/* Badges affichant la sélection */}
               <div className="mt-3">
-                {selectedEquipement && <Badge bg="info" className="me-2">{selectedEquipement}</Badge>}
+                {selectedModele && <Badge bg="primary" className="me-2">{selectedModele}</Badge>}
                 {selectedFormat && <Badge bg="secondary" className="me-2">{selectedFormat}</Badge>}
                 {selectedFinition && <Badge bg="success">{selectedFinition}</Badge>}
+                {selectedEquipement && <Badge bg="info" className="me-2">{selectedEquipement}</Badge>}
               </div>
             </Card.Body>
             <Card.Footer className="text-center">
               <Button
                 variant="success"
-                disabled={!selectedEquipement || !selectedFormat || !selectedFinition}
+                disabled={!selectedModele || !selectedFormat || !selectedFinition || !selectedEquipement}
               >
                 Ajouter au panier
               </Button>
@@ -218,9 +263,10 @@ function App() {
                 variant="secondary"
                 className="ms-2"
                 onClick={() => {
-                  setSelectedEquipement('');
+                  setSelectedModele('');
                   setSelectedFormat('');
                   setSelectedFinition('');
+                  setSelectedEquipement('');
                   setPreviewImage('');
                 }}
               >

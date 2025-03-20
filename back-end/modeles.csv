@@ -1,0 +1,12 @@
+NomModele,forme,epaisseur,matiere,fixation,Prix
+Prestige,angle vif,8,Laiton,Aimant,
+Inoxtar,angle vif,8,Inox,Aimant,
+Alumix,angle vif,8,Aluminium,Aimant,
+Cockpit (interrupteur a levier),Arrondis,8,Laiton,Vis,
+Cockpit (interrupteur a levier),Arrondis,9,Laiton,Aimant,
+Finesse,angle vif,3,Aluminium,Aimant,
+Finesse,angle vif,3,Inox,Aimant,
+Finesse,angle vif,3,Laiton,Aimant,
+Cuir_Vagues,angle vif,8,Cuir +1mm,Aimant,
+Cuir_Dunes,angle vif,8,Cuir + 1mm,Aimant,
+Trimless,angle vif,8,,Aimant,
