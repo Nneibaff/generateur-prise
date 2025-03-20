@@ -1,0 +1,90 @@
+NomFinition,Item,Reference,Prix,modele
+Brossage,Laiton Vieilli clair,L100,,Prestige
+Brossage,Laiton Vieilli fonce,L101,,Prestige
+Brossage,Laiton vieilli double brossage,L102,,Prestige
+Brossage,Laiton Verni,L103,,Prestige
+Brossage,Laiton dore,L104,,Prestige
+Brossage,Laiton Canon de Fusil,L105,,Prestige
+Brossage,Laiton Chrome,L106,,Prestige
+Brossage,Laiton Nickel ,L107,,Prestige
+Brossage,Laiton Bronze ,L108,,Prestige
+Brossage,Laiton Cuivre,L109,,Prestige
+Polissage,Laiton Vieilli,L200,,Prestige
+Polissage,Laiton Verni,L201,,Prestige
+Polissage,Laiton dore,L202,,Prestige
+Polissage,Laiton Canon de Fusil,L203,,Prestige
+Polissage,Laiton Chrome,L204,,Prestige
+Polissage,Laiton Nickel ,L205,,Prestige
+Polissage,Laiton Bronze ,L206,,Prestige
+Polissage,Laiton Cuivre,L207,,Prestige
+Microbillage,Laiton Vieilli,L300,,Prestige
+Microbillage,Laiton Verni,L301,,Prestige
+Microbillage,Laiton Canon de Fusil,L302,,Prestige
+Microbillage,Laiton Chrome,L303,,Prestige
+Microbillage,Laiton Nickel ,L304,,Prestige
+Microbillage,Laiton Bronze ,L305,,Prestige
+Microbillage,Laiton Cuivre,L306,,Prestige
+Brossage,Laiton Vieilli clair,L100,,Cockpit
+Brossage,Laiton Vieilli fonce,L101,,Cockpit
+Brossage,Laiton vieilli double brossage,L102,,Cockpit
+Brossage,Laiton Verni,L103,,Cockpit
+Brossage,Laiton dore,L104,,Cockpit
+Brossage,Laiton Canon de Fusil,L105,,Cockpit
+Brossage,Laiton Chrome,L106,,Cockpit
+Brossage,Laiton Nickel ,L107,,Cockpit
+Brossage,Laiton Bronze ,L108,,Cockpit
+Brossage,Laiton Cuivre,L109,,Cockpit
+Polissage,Laiton Vieilli,L200,,Cockpit
+Polissage,Laiton Verni,L201,,Cockpit
+Polissage,Laiton dore,L202,,Cockpit
+Polissage,Laiton Canon de Fusil,L203,,Cockpit
+Polissage,Laiton Chrome,L204,,Cockpit
+Polissage,Laiton Nickel ,L205,,Cockpit
+Polissage,Laiton Bronze ,L206,,Cockpit
+Polissage,Laiton Cuivre,L207,,Cockpit
+Microbillage,Laiton Vieilli,L300,,Cockpit
+Microbillage,Laiton Verni,L301,,Cockpit
+Microbillage,Laiton Canon de Fusil,L302,,Cockpit
+Microbillage,Laiton Chrome,L303,,Cockpit
+Microbillage,Laiton Nickel ,L304,,Cockpit
+Microbillage,Laiton Bronze ,L305,,Cockpit
+Microbillage,Laiton Cuivre,L306,,Cockpit
+Brossage,Anodise noir,L400,,Alumix
+Brossage,Anodise incolore,L401,,Alumix
+Brossage,Anodise naturel,L402,,Alumix
+Brossage,Anodise Bordeaux,L403,,Alumix
+Brossage,Anodise Rouge,L404,,Alumix
+Brossage,Anodise Bleu,L405,,Alumix
+Brossage,Anodise Bronze claire,L406,,Alumix
+Brossage,Anodise Vert flash,L407,,Alumix
+Brossage,Anodise Orange,L408,,Alumix
+Brossage,Anodise Or 9,L409,,Alumix
+Brossage,Anodise Or 8,L410,,Alumix
+Brossage,Anodise Or 7,L411,,Alumix
+Brossage,Aluminium Chrome,L412,,Alumix
+Brossage,Aluminium Cuivre,L413,,Alumix
+Polissage,Anodise noir,L500,,Alumix
+Polissage,Anodise naturel,L501,,Alumix
+Polissage,Anodise Bordeaux,L502,,Alumix
+Polissage,Anodise Rouge,L503,,Alumix
+Polissage,Anodise Bleu,L504,,Alumix
+Polissage,Anodise Bronze claire,L505,,Alumix
+Polissage,Anodise Vert flash,L506,,Alumix
+Polissage,Anodise Orange,L507,,Alumix
+Polissage,Anodise Or 9,L508,,Alumix
+Polissage,Anodise Or 8,L509,,Alumix
+Polissage,Anodise Or 7,L510,,Alumix
+Microbillage,Anodise noir,L600,,Alumix
+Microbillage,Anodise naturel,L601,,Alumix
+Microbillage,Anodise Bordeaux,L602,,Alumix
+Microbillage,Anodise Rouge,L603,,Alumix
+Microbillage,Anodise Bleu,L604,,Alumix
+Microbillage,Anodise Bronze claire,L605,,Alumix
+Microbillage,Anodise Vert flash,L606,,Alumix
+Microbillage,Anodise Orange,L607,,Alumix
+Microbillage,Anodise Or 9,L608,,Alumix
+Microbillage,Anodise Or 8,L609,,Alumix
+Microbillage,Anodise Or 7,L610,,Alumix
+Brossage,Inox brosse,L700,,Inoxtar
+Polissage,Inox poli,L701,,Inoxtar
+Verre,Verre blanc,L800,,Verre

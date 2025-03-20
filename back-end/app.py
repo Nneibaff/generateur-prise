@@ -13,14 +13,12 @@ CORS(app)  # Permettre les requêtes depuis React
 def get_formats():
     formats = []
     
-    if os.path.exists('formats.csv'):  # Vérifier si le fichier existe
+    if os.path.exists('formats.csv'): 
         try:
             with open('formats.csv', newline='', encoding='utf-8') as csvfile:
                 reader = csv.DictReader(csvfile)
                 for row in reader:
-                
-                    # Nettoyer les données si nécessaire
-                    formats.append(row)
+                    formats.append(row) 
             return jsonify(formats)
         except Exception as e:
             return jsonify({"error": f"Erreur lors de la lecture du fichier CSV: {str(e)}"}), 500
@@ -45,7 +43,22 @@ def get_equipements():
         return jsonify({"error": "Fichier CSV non trouvé"}), 404
     
 
+@app.route('/api/finitions', methods=['GET'])
+def get_finitions():
+    finitions = []
 
+    if os.path.exists('finitions.csv'):  
+        try:
+            with open('finitions.csv', newline='', encoding='utf-8') as csvfile:
+                reader = csv.DictReader(csvfile)
+                for row in reader:
+                    finitions.append(row)
+            return jsonify(finitions)
+        except Exception as e:
+            return jsonify({"error": f"Erreur lors de la lecture du fichier CSV: {str(e)}"}), 500
+    else:
+        return jsonify({"error": "Fichier CSV non trouvé"}), 404
+    
 
 
 if __name__ == '__main__':

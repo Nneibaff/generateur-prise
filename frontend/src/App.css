@@ -1,41 +1,134 @@
+/* General Styles */
+body {
+  background-color: #f5f5f5;
+  font-family: 'Arial', sans-serif;
+}
+
+h1 {
+  font-family: 'Arial', sans-serif;
+  color: #343a40;
+  font-weight: bold;
+}
+
+button {
+  margin-top: 10px;
+}
+
+/* Sidebar Styles */
 .config-sidebar {
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-  }
-  
-  .config-preview {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-  }
-  
-  .card-body {
-    padding: 20px;
-  }
-  
-  h1 {
-    font-family: 'Arial', sans-serif;
-    color: #343a40;
-  }
-  
-  button {
-    margin-top: 20px;
-  }
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
-  .header-container {
-    background-color: #e9ecef;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-  }
+.config-sidebar .card-header {
+  background-color: #007bff;
+  color: #ffffff;
+  font-weight: bold;
+  text-align: center;
+}
 
-  .fade-in {
-    animation: fadeIn 0.5s ease-in-out;
+.config-sidebar .card-body {
+  padding: 15px;
+}
+
+.config-sidebar .btn {
+  margin-bottom: 10px;
+}
+
+/* Preview Section Styles */
+.config-preview {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.config-preview img {
+  max-width: 70%;
+  border-radius: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.config-preview img:hover {
+  transform: scale(1.05);
+}
+
+.config-preview .card-header {
+  background-color: #007bff;
+  color: #ffffff;
+  font-weight: bold;
+  text-align: center;
+}
+
+.config-preview .card-footer {
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+}
+
+/* List Group Styles */
+.list-group {
+  max-height: 400px;
+  overflow-y: auto;
+  border-radius: 8px;
+}
+
+.list-group-item {
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.list-group-item:hover {
+  background-color: #f1f1f1;
+}
+
+.list-group-item.active {
+  background-color: #007bff;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* Badge Styles */
+.badge {
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 12px;
+}
+
+.badge-info {
+  background-color: #17a2b8;
+}
+
+.badge-secondary {
+  background-color: #6c757d;
+}
+
+.badge-success {
+  background-color: #28a745;
+}
+
+/* Fade-in Animation */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  to {
+    opacity: 1;
   }
+}
+
+/* Header Container */
+.header-container {
+  background-color: #e9ecef;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
