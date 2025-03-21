@@ -12,6 +12,8 @@ function App() {
   const [selectedFormat, setSelectedFormat] = useState('');
   const [finitions, setFinitions] = useState([]);
   const [selectedFinition, setSelectedFinition] = useState('');
+  const [motifsCuirs, setMotifsCuirs] = useState([]);
+  const [selectedMotifCuir, setSelectedMotifCuir] = useState('');
   const [equipements, setEquipements] = useState([]);
   const [selectedEquipement, setSelectedEquipement] = useState('');
   const [previewImage, setPreviewImage] = useState('');
@@ -19,7 +21,9 @@ function App() {
   const [showEquipements, setShowEquipements] = useState(false);
   const [showFormats, setShowFormats] = useState(false);
   const [showFinitions, setShowFinitions] = useState(false);
+  const [showMotifsCuirs, setShowMotifsCuirs] = useState(false);
   const [showModeles, setShowModeles] = useState(false);
+  
  
 
   useEffect(() => {
@@ -36,11 +40,13 @@ function App() {
     .catch(() => setError("Erreur lors de la récupération des modeles."));
   }, []);
 
+
   useEffect(() => {
     axios.get("http://localhost:5000/api/formats")
       .then(response => setFormats(response.data))
       .catch(() => setError("Erreur lors de la récupération des formats."));
   }, []);
+
 
   useEffect(() => {
     axios.get("http://localhost:5000/api/finitions")
@@ -56,6 +62,22 @@ function App() {
       .catch(() => setError("Erreur lors de la récupération des finitions."));
   }, []);
 
+ 
+  useEffect(() => {
+    axios.get("http://localhost:5000/api/motifscuir")
+      .then(response => {
+        const uniqueMotifCuir = [];
+        response.data.forEach(motifs => {
+          if (!uniqueMotifCuir.some(m => m['Motif'] === motifs['Motif'])) {
+            uniqueMotifCuir.push(motifs);
+          }
+        });
+        setMotifsCuirs(uniqueMotifCuir);
+      })
+      .catch(() => setError("Erreur lors de la récupération des motifs cuir."));
+  }, []);
+
+
   useEffect(() => {
     axios.get("http://localhost:5000/api/equipements")
       .then(response => {
@@ -70,12 +92,12 @@ function App() {
       .catch(() => setError("Erreur lors de la récupération des équipements."));
   }, []);
 
+
   useEffect(() => {
     if (selectedEquipement && selectedFormat) {
       setPreviewImage(`/images/${selectedEquipement}_${selectedFormat}.png`);
     }
   }, [selectedEquipement, selectedFormat]);
-
 
 
 
@@ -112,6 +134,7 @@ function App() {
                 onClick={() => {
                   setShowModeles(!showModeles);
                   setShowFormats(false);
+                  setShowMotifsCuirs(false);
                   setShowEquipements(false);
                   setShowFinitions(false);
                 }}
@@ -125,6 +148,7 @@ function App() {
                   setShowModeles(false);
                   setShowFormats(!showFormats);                  
                   setShowFinitions(false);
+                  setShowMotifsCuirs(false);
                   setShowEquipements(false);
                 }}
               >
@@ -135,8 +159,14 @@ function App() {
                 className="w-100"
                 onClick={() => {
                   setShowModeles(false);
-                  setShowFormats(false);          
+                  setShowFormats(false);
+                    // si le modele choisi est cuir alors on affiche les motifs cuir sinon on affiche les finitions
+                  if (selectedModele === 'Cuir') {
+                    setShowMotifsCuirs(!showMotifsCuirs);
+                  }
+                  else {
                   setShowFinitions(!showFinitions);
+                  }
                   setShowEquipements(false);
                 }}
               >
@@ -149,6 +179,7 @@ function App() {
                   setShowModeles(false);
                   setShowFormats(false);
                   setShowFinitions(false);
+                  setShowMotifsCuirs(false);
                   setShowEquipements(!showEquipements);
                 }}
               >
@@ -158,7 +189,7 @@ function App() {
           </Card>
 
           {/* Affichage conditionnel des listes */}
-          {(showModeles || showFormats || showFinitions || showEquipements) && (
+          {(showModeles || showFormats || showFinitions || showMotifsCuirs || showEquipements) && (
             <Card className="shadow-sm">
               <Card.Body>
                 <Card.Title className="text-center">
@@ -168,8 +199,9 @@ function App() {
                     ? "Equipements disponibles"
                     : showFormats
                     ? "Formats disponibles"
-                    : "Finitions disponibles"
-                  }
+                    : showMotifsCuirs
+                    ? "Motifs Cuir disponibles"
+                    : "Finitions disponibles"}
                 </Card.Title> 
                 <ListGroup style={{ maxHeight: '400px', overflowY: 'auto' }}>
                 {showModeles &&
@@ -191,21 +223,37 @@ function App() {
                         active={selectedFormat === format['Item']} 
                         onClick={() => setSelectedFormat(format['Item'])} 
                       >
-                        {/* {index === 0 ? svg: null} */}
+                        {/* {index === 0 ? svg: null}  */}
                         {format['Item']}
                       </ListGroup.Item>
                     ))}
+                  {showMotifsCuirs &&
+                    motifsCuirs.map((motif, index) => (
+                          <ListGroup.Item
+                            key={index}
+                            action
+                            active={selectedMotifCuir === motif['Motif']}
+                            // quand on clique sur un motif cuir on le selectionne et on efface la finition
+                            onClick={() => {
+                              setSelectedMotifCuir(motif['Motif']);
+                              setSelectedFinition('');
+                            }
+                          }
+                          >
+                            {motif['Motif']}
+                          </ListGroup.Item>
+                        ))}
                   {showFinitions &&
                     finitions.map((finition, index) => (
-                      <ListGroup.Item
-                        key={index}
-                        action
-                        active={selectedFinition === finition['NomFinition']}
-                        onClick={() => setSelectedFinition(finition['NomFinition'])}
-                      >
-                        {finition['NomFinition']}
-                      </ListGroup.Item>
-                    ))}
+                          <ListGroup.Item
+                            key={index}
+                            action
+                            active={selectedFinition === finition['NomFinition']}
+                            onClick={() => setSelectedFinition(finition['NomFinition'])}
+                          >
+                            {finition['NomFinition']}
+                          </ListGroup.Item>
+                        ))}
                   {showEquipements &&
                     equipements.map((equipement, index) => (
                       <ListGroup.Item
@@ -248,7 +296,8 @@ function App() {
               <div className="mt-3">
                 {selectedModele && <Badge bg="primary" className="me-2">{selectedModele}</Badge>}
                 {selectedFormat && <Badge bg="secondary" className="me-2">{selectedFormat}</Badge>}
-                {selectedFinition && <Badge bg="success">{selectedFinition}</Badge>}
+                {selectedFinition && <Badge bg="success" className="me-2">{selectedFinition}</Badge>}
+                {selectedMotifCuir && <Badge bg="warning" className="me-2">{selectedMotifCuir}</Badge>}
                 {selectedEquipement && <Badge bg="info" className="me-2">{selectedEquipement}</Badge>}
               </div>
             </Card.Body>
@@ -266,6 +315,7 @@ function App() {
                   setSelectedModele('');
                   setSelectedFormat('');
                   setSelectedFinition('');
+                  setSelectedMotifCuir('');
                   setSelectedEquipement('');
                   setPreviewImage('');
                 }}
