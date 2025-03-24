@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Container, Row, Col, Card, Spinner, Button, ListGroup, Badge, Alert } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';  // Styles personnalisés si nécessaire
+import './App.css'; 
 
 function App() {
   
@@ -12,20 +12,29 @@ function App() {
   const [selectedFormat, setSelectedFormat] = useState('');
   const [finitions, setFinitions] = useState([]);
   const [selectedFinition, setSelectedFinition] = useState('');
+  const [couleursFinitions, setCouleursFinitions] = useState('');
+  const [selectedCouleurFinition, setSelectedCouleurFinition] = useState('');
   const [motifsCuirs, setMotifsCuirs] = useState([]);
   const [selectedMotifCuir, setSelectedMotifCuir] = useState('');
   const [equipements, setEquipements] = useState([]);
   const [selectedEquipement, setSelectedEquipement] = useState('');
+ 
+
   const [previewImage, setPreviewImage] = useState('');
+
+
   const [error, setError] = useState('');
+
+
   const [showEquipements, setShowEquipements] = useState(false);
   const [showFormats, setShowFormats] = useState(false);
   const [showFinitions, setShowFinitions] = useState(false);
   const [showMotifsCuirs, setShowMotifsCuirs] = useState(false);
   const [showModeles, setShowModeles] = useState(false);
-  
+  const [showCouleurs, setShowCouleurs] = useState(false);
  
 
+  //  charger les modeles une seule fois et si un modele est selectionné, la liste des finitions est mise à jour
   useEffect(() => {
     axios.get("http://localhost:5000/api/modeles")
     .then(response => {
@@ -39,14 +48,6 @@ function App() {
     })
     .catch(() => setError("Erreur lors de la récupération des modeles."));
   }, []);
-
-
-  useEffect(() => {
-    axios.get("http://localhost:5000/api/formats")
-      .then(response => setFormats(response.data))
-      .catch(() => setError("Erreur lors de la récupération des formats."));
-  }, []);
-
 
   useEffect(() => {
     axios.get("http://localhost:5000/api/finitions")
@@ -62,19 +63,37 @@ function App() {
       .catch(() => setError("Erreur lors de la récupération des finitions."));
   }, []);
 
- 
+ // Filtrer les finitions en fonction du modèle sélectionné
   useEffect(() => {
-    axios.get("http://localhost:5000/api/motifscuir")
-      .then(response => {
-        const uniqueMotifCuir = [];
-        response.data.forEach(motifs => {
-          if (!uniqueMotifCuir.some(m => m['Motif'] === motifs['Motif'])) {
-            uniqueMotifCuir.push(motifs);
-          }
-        });
-        setMotifsCuirs(uniqueMotifCuir);
-      })
-      .catch(() => setError("Erreur lors de la récupération des motifs cuir."));
+    if (selectedModele) {
+      axios.get("http://localhost:5000/api/finitions")
+        .then(response => {
+          const filteredFinitions = response.data.filter(f => f.modele === selectedModele);
+          // si il y a plusieurs fois le même nom de finition, on ne garde que la première occurence
+          const uniqueFinitions = [];
+          filteredFinitions.forEach(finition => {
+            if (!uniqueFinitions.some(m => m['NomFinition'] === finition['NomFinition'])) {
+              uniqueFinitions.push(finition);
+            }
+          });
+          // stocker les couleurs de la finition et du modele sélectionné
+          const couleur = filteredFinitions
+            .filter(finition => finition.modele === selectedModele)
+            .map(finition => finition.couleur);
+          setFinitions(uniqueFinitions);
+          setCouleursFinitions(couleur);
+        })
+        .catch(() => setError("Erreur lors de la récupération des finitions."));
+    }
+  }, [selectedModele]);
+
+   
+
+
+  useEffect(() => {
+    axios.get("http://localhost:5000/api/formats")
+      .then(response => setFormats(response.data))
+      .catch(() => setError("Erreur lors de la récupération des formats."));
   }, []);
 
 
@@ -98,7 +117,6 @@ function App() {
       setPreviewImage(`/images/${selectedEquipement}_${selectedFormat}.png`);
     }
   }, [selectedEquipement, selectedFormat]);
-
 
 
   return (
@@ -134,9 +152,9 @@ function App() {
                 onClick={() => {
                   setShowModeles(!showModeles);
                   setShowFormats(false);
+                  setShowFinitions(false);
                   setShowMotifsCuirs(false);
                   setShowEquipements(false);
-                  setShowFinitions(false);
                 }}
               >
                 {showModeles ? "Masquer les modèles" : "Voir les modèles"}
@@ -156,21 +174,29 @@ function App() {
               </Button>
               <Button
                 variant="outline-primary"
-                className="w-100"
+                className="w-100 mb-2"
                 onClick={() => {
                   setShowModeles(false);
                   setShowFormats(false);
-                    // si le modele choisi est cuir alors on affiche les motifs cuir sinon on affiche les finitions
-                  if (selectedModele === 'Cuir') {
-                    setShowMotifsCuirs(!showMotifsCuirs);
-                  }
-                  else {
                   setShowFinitions(!showFinitions);
-                  }
                   setShowEquipements(false);
                 }}
               >
                 {showFinitions ? "Masquer les finitions" : "Voir les finitions"}
+              </Button>
+              <Button
+                variant="outline-primary"
+                className="w-100 mb-2"
+                onClick={() => {
+                  setShowModeles(false);
+                  setShowFormats(false);
+                  setShowFinitions(false);
+                  setShowCouleurs(!showCouleurs);
+                  setShowMotifsCuirs(false);
+                  setShowEquipements(false);
+                }}
+              >
+                {showCouleurs ? "Masquer les couleurs" : "Voir les couleurs"}
               </Button>
               <Button
                 variant="outline-primary"
@@ -189,7 +215,7 @@ function App() {
           </Card>
 
           {/* Affichage conditionnel des listes */}
-          {(showModeles || showFormats || showFinitions || showMotifsCuirs || showEquipements) && (
+          {(showModeles || showFormats || showFinitions || showCouleurs || showEquipements) && (
             <Card className="shadow-sm">
               <Card.Body>
                 <Card.Title className="text-center">
@@ -201,6 +227,8 @@ function App() {
                     ? "Formats disponibles"
                     : showMotifsCuirs
                     ? "Motifs Cuir disponibles"
+                    : showCouleurs
+                    ? "Couleurs disponibles"
                     : "Finitions disponibles"}
                 </Card.Title> 
                 <ListGroup style={{ maxHeight: '400px', overflowY: 'auto' }}>
@@ -227,22 +255,6 @@ function App() {
                         {format['Item']}
                       </ListGroup.Item>
                     ))}
-                  {showMotifsCuirs &&
-                    motifsCuirs.map((motif, index) => (
-                          <ListGroup.Item
-                            key={index}
-                            action
-                            active={selectedMotifCuir === motif['Motif']}
-                            // quand on clique sur un motif cuir on le selectionne et on efface la finition
-                            onClick={() => {
-                              setSelectedMotifCuir(motif['Motif']);
-                              setSelectedFinition('');
-                            }
-                          }
-                          >
-                            {motif['Motif']}
-                          </ListGroup.Item>
-                        ))}
                   {showFinitions &&
                     finitions.map((finition, index) => (
                           <ListGroup.Item
@@ -253,7 +265,18 @@ function App() {
                           >
                             {finition['NomFinition']}
                           </ListGroup.Item>
-                        ))}
+                    ))}
+                  {showCouleurs &&
+                    couleursFinitions.map((couleur, index) => (
+                      <ListGroup.Item
+                        key={index}
+                        action
+                        active={selectedCouleurFinition === couleur['CouleurFinition']}
+                        onClick={() => setSelectedCouleurFinition(couleur['CouleurFinition'])}
+                      >
+                        {couleur['CouleurFinition']}
+                      </ListGroup.Item>
+                    ))}
                   {showEquipements &&
                     equipements.map((equipement, index) => (
                       <ListGroup.Item
@@ -288,7 +311,7 @@ function App() {
               ) : (
                 <div className="mt-3">
                   <Spinner animation="border" variant="primary" />
-                  <p className="mt-2">Sélectionnez un modele, un format, une finition, des équipements</p>
+                  <p className="mt-2">Sélectionnez un modele, un format, une finition, des couleurs, des équipements</p>
                 </div>
               )}
 
@@ -297,14 +320,14 @@ function App() {
                 {selectedModele && <Badge bg="primary" className="me-2">{selectedModele}</Badge>}
                 {selectedFormat && <Badge bg="secondary" className="me-2">{selectedFormat}</Badge>}
                 {selectedFinition && <Badge bg="success" className="me-2">{selectedFinition}</Badge>}
-                {selectedMotifCuir && <Badge bg="warning" className="me-2">{selectedMotifCuir}</Badge>}
+                {selectedCouleurFinition && <Badge bg="warning" className="me-2">{selectedCouleurFinition}</Badge>}
                 {selectedEquipement && <Badge bg="info" className="me-2">{selectedEquipement}</Badge>}
               </div>
             </Card.Body>
             <Card.Footer className="text-center">
               <Button
                 variant="success"
-                disabled={!selectedModele || !selectedFormat || !selectedFinition || !selectedEquipement}
+                disabled={!selectedModele || !selectedFormat || !selectedFinition ||!selectedMotifCuir ||!selectedEquipement}
               >
                 Ajouter au panier
               </Button>

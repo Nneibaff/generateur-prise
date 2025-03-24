@@ -1,4 +1,4 @@
-NomFinition,Item,Reference,Prix,modele
+NomFinition,CouleurFinition,Reference,Prix,modele
 Brossage,Laiton Vieilli clair,L100,0,Prestige
 Brossage,Laiton Vieilli fonce,L101,0,Prestige
 Brossage,Laiton vieilli double brossage,L102,0,Prestige
@@ -25,7 +25,7 @@ Microbillage,Laiton Nickel ,L304,0,Prestige
 Microbillage,Laiton Bronze ,L305,0,Prestige
 Microbillage,Laiton Cuivre,L306,0,Prestige
 Brossage,Laiton Vieilli clair,L100,0,Cockpit
-Brossage,Laiton Vieilli fonce,L101,0,Cockpit
+Brossage,Laiton Vieilli fonce,L101,0,Cockpit    
 Brossage,Laiton vieilli double brossage,L102,0,Cockpit
 Brossage,Laiton Verni,L103,0,Cockpit
 Brossage,Laiton dore,L104,0,Cockpit
@@ -87,4 +87,6 @@ Microbillage,Anodise Or 8,L609,0,Alumix
 Microbillage,Anodise Or 7,L610,0,Alumix
 Brossage,Inox brosse,L700,0,Inoxtar
 Polissage,Inox poli,L701,0,Inoxtar
-Verre,Verre blanc,L800,0,Verre
+Verre,Verre blanc,L800,0,Cristaline
+Cuir Vagues,Cuir Vagues,,0,Cuir
+Cuir Dunes,Cuir Dunes,,0,Cuir

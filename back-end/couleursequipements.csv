@@ -1,5 +1,5 @@
-Equipement,Item,Reference,Couleur,Prix
-1xT13,Plaque frontale T13,1T13BL, blanc,0
+Item,Equipement,Reference,Couleur,Prix
+1xT13,Plaque frontale T13,1T13BL,blanc,0
 1xT13,Plaque frontale T13,1T13OL,olive,0
 1xT13,Plaque frontale T13,1T13SI,silver,0
 1xT13,Plaque frontale T13,1T13CR,crema,0
@@ -11,7 +11,7 @@ Equipement,Item,Reference,Couleur,Prix
 1xT13,Plaque frontale T13,1T13OR,orange,0
 1xT13,Plaque frontale T13,1T13BE,berry,0
 1xT13,Plaque frontale T13,1T13GR,gris clair,0
-2xT13,Plaque frontale 2xT13,2T13BL, blanc,0
+2xT13,Plaque frontale 2xT13,2T13BL,blanc,0
 2xT13,Plaque frontale 2xT13,2T13OL,olive,0
 2xT13,Plaque frontale 2xT13,2T13SI,silver,0
 2xT13,Plaque frontale 2xT13,2T13CR,crema,0
@@ -23,7 +23,7 @@ Equipement,Item,Reference,Couleur,Prix
 2xT13,Plaque frontale 2xT13,2T13OR,orange,0
 2xT13,Plaque frontale 2xT13,2T13BE,berry,0
 2xT13,Plaque frontale 2xT13,2T13GR,gris clair,0
-3xT13,Plaque frontale 3xT13,3T13BL, blanc,0
+3xT13,Plaque frontale 3xT13,3T13BL,blanc,0
 3xT13,Plaque frontale 3xT13,3T13OL,olive,0
 3xT13,Plaque frontale 3xT13,3T13SI,silver,0
 3xT13,Plaque frontale 3xT13,3T13CR,crema,0
@@ -107,18 +107,18 @@ Equipement,Item,Reference,Couleur,Prix
 3xT23 commande,Plaque frontale 3xT23 commande,3T23COR,orange,0
 3xT23 commande,Plaque frontale 3xT23 commande,3T23CBE,berry,0
 3xT23 commande,Plaque frontale 3xT23 commande,3T23CGR,gris clair,0
-1xT25,Plaque frontale T25,1T25BL,blanc,0
-1xT25,Plaque frontale T25,1T25OL,olive,0
-1xT25,Plaque frontale T25,1T25SI,silver,0
-1xT25,Plaque frontale T25,1T25CR,crema,0
-1xT25,Plaque frontale T25,1T25GF,gris fonce,0
-1xT25,Plaque frontale T25,1T25VA,vanille,0
-1xT25,Plaque frontale T25,1T25SA,sand,0
-1xT25,Plaque frontale T25,1T25NO,noir,0
-1xT25,Plaque frontale T25,1T25LE,lemon,0
-1xT25,Plaque frontale T25,1T25OR,orange,0
-1xT25,Plaque frontale T25,1T25BE,berry,0
-1xT25,Plaque frontale T25,1T25GR,gris clair,0
+1xT25,Plaque frontale 1xT25,1T25BL,blanc,0
+1xT25,Plaque frontale 1xT25,1T25OL,olive,0
+1xT25,Plaque frontale 1xT25,1T25SI,silver,0
+1xT25,Plaque frontale 1xT25,1T25CR,crema,0
+1xT25,Plaque frontale 1xT25,1T25GF,gris fonce,0
+1xT25,Plaque frontale 1xT25,1T25VA,vanille,0
+1xT25,Plaque frontale 1xT25,1T25SA,sand,0
+1xT25,Plaque frontale 1xT25,1T25NO,noir,0
+1xT25,Plaque frontale 1xT25,1T25LE,lemon,0
+1xT25,Plaque frontale 1xT25,1T25OR,orange,0
+1xT25,Plaque frontale 1xT25,1T25BE,berry,0
+1xT25,Plaque frontale 1xT25,1T25GR,gris clair,0
 USB A+C/T13,USB A+C/T13 Combinaison 3.0A,USBACT13BL,blanc,0
 USB A+C/T13,USB A+C/T13 Combinaison 3.0A,USBACT13OL,olive,0
 USB A+C/T13,USB A+C/T13 Combinaison 3.0A,USBACT13SI,silver,0

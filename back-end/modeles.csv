@@ -1,4 +1,4 @@
-NomModele,forme,epaisseur,matiere,fixation,Prix
+NomModele,Forme,Epaisseur,Finition,Fixation,Prix
 Prestige,Angle vif,8,Laiton,Aimant,0
 Inoxtar,Angle vif,8,Inox,Aimant,0
 Alumix,Angle vif,8,Aluminium,Aimant,0
@@ -7,6 +7,6 @@ Cockpit (interrupteur a levier),Arrondis,9,Laiton,Aimant,0
 Finesse,Angle vif,3,Aluminium,Aimant,0
 Finesse,Angle vif,3,Inox,Aimant,0
 Finesse,Angle vif,3,Laiton,Aimant,0
+Rotor,Angle vif,8,Laiton,Aimant,0
 Cuir,Angle vif,8,Cuir +1mm,Aimant,0
 Cristaline,Angle vif,8,Verre,aimant,0
-Rotor,Angle vif,8,Laiton,Aimant,0
