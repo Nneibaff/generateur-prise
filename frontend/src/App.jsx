@@ -30,6 +30,7 @@ function App() {
   const [showModeles, setShowModeles] = useState(false);
   const [showFormats, setShowFormats] = useState(false);
   const [showFinitions, setShowFinitions] = useState(false);
+  const [showTypesFinitions, setShowTypesFinitions] = useState(false);
   const [showCouleursCuirs, setShowCouleursCuirs] = useState(false);
   const [showCouleurs, setShowCouleurs] = useState(false);
   const [showEquipements, setShowEquipements] = useState(false);

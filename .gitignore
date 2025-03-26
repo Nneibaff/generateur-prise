@@ -4,3 +4,7 @@ env/
 
 # Ignore the csv files
 *.csv
+
+
+# Ignore vscode
+!.vscode/extensions.json
