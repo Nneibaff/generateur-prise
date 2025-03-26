@@ -1,8 +1,6 @@
-# Ignore the env/ directory
-env/
+# Ignore the .env file
+env/ 
 .env
 
 # Ignore the csv files
 *.csv
-
-

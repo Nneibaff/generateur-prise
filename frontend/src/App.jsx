@@ -12,6 +12,8 @@ function App() {
   const [selectedFormat, setSelectedFormat] = useState('');
   const [finitions, setFinitions] = useState([]);
   const [selectedFinition, setSelectedFinition] = useState('');
+  const [typesFinitions, setTypesFinitions] = useState([]);
+  const [selectedTypeFinition, setSelectedTypeFinition] = useState('');
   const [couleursFinitions, setCouleursFinitions] = useState([]);
   const [selectedCouleurFinition, setSelectedCouleurFinition] = useState('');
   const [couleursCuirs, setCouleursCuirs] = useState([]);
@@ -49,7 +51,7 @@ function App() {
 
   useEffect(() => {
     axios.get("http://localhost:5000/api/finitions")
-      .then(response => {
+      .then(response => { 
         const uniqueFinitions = [];
         response.data.forEach(finition => {
           if (!uniqueFinitions.some(m => m['NomFinition'] === finition['NomFinition'])) {
@@ -61,7 +63,24 @@ function App() {
       .catch(() => setError("Erreur lors de la récupération des finitions."));
   }, []);
 
- // Filtrer les finitions en fonction du modèle sélectionné
+  useEffect(() => {    
+    if (selectedFinition) { 
+      axios.get("http://localhost:5000/api/finition")  
+        .then(response => {
+          const filteredTypeFinition = response.data.filter(f => f.NomFinition === selectedFinition);
+          const uniqueTypeFinition = [];
+          filteredTypeFinition.forEach(typeFinition => {
+            if (!uniqueTypeFinition.some(m => m['TypeFinition'] === typeFinition['TypeFinition'])) {
+              uniqueTypeFinition.push(typeFinition);
+            }
+          });
+          setTypesFinitions(uniqueTypeFinition);
+        })
+        .catch(() => setError("Erreur lors de la récupération des types de finitions."));
+    }
+  }, [selectedFinition]);
+
+
   useEffect(() => {
     if (selectedModele) {
       axios.get("http://localhost:5000/api/finitions")
