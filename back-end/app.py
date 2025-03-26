@@ -47,6 +47,16 @@ def get_finitions():
     else:
         return jsonify({"error": "Fichier CSV non trouvé"}), 404
 
+@app.route('/api/motifs', methods=['GET'])
+def get_motifs():
+    if os.path.exists('motifscuir.csv'):
+        try:
+            motifs = read_csv_file('motifscuir.csv')
+            return jsonify(motifs)
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+    else:
+        return jsonify({"error": "Fichier CSV non trouvé"}), 404
 
 @app.route('/api/equipements', methods=['GET'])
 def get_equipements():

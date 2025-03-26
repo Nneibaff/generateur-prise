@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import axios from 'axios';
 import { Container, Row, Col, Card, Spinner, Button, ListGroup, Badge, Alert } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -12,10 +12,10 @@ function App() {
   const [selectedFormat, setSelectedFormat] = useState('');
   const [finitions, setFinitions] = useState([]);
   const [selectedFinition, setSelectedFinition] = useState('');
-  const [couleursFinitions, setCouleursFinitions] = useState('');
+  const [couleursFinitions, setCouleursFinitions] = useState([]);
   const [selectedCouleurFinition, setSelectedCouleurFinition] = useState('');
-  const [motifsCuirs, setMotifsCuirs] = useState([]);
-  const [selectedMotifCuir, setSelectedMotifCuir] = useState('');
+  const [couleursCuirs, setCouleursCuirs] = useState([]);
+  const [selectedCouleurCuir, setSelectedCouleurCuir] = useState('');
   const [equipements, setEquipements] = useState([]);
   const [selectedEquipement, setSelectedEquipement] = useState('');
  
@@ -25,15 +25,13 @@ function App() {
 
   const [error, setError] = useState('');
 
-
-  const [showEquipements, setShowEquipements] = useState(false);
+  const [showModeles, setShowModeles] = useState(false);
   const [showFormats, setShowFormats] = useState(false);
   const [showFinitions, setShowFinitions] = useState(false);
-  const [showMotifsCuirs, setShowMotifsCuirs] = useState(false);
-  const [showModeles, setShowModeles] = useState(false);
+  const [showCouleursCuirs, setShowCouleursCuirs] = useState(false);
   const [showCouleurs, setShowCouleurs] = useState(false);
+  const [showEquipements, setShowEquipements] = useState(false);
  
-
   //  charger les modeles une seule fois et si un modele est selectionné, la liste des finitions est mise à jour
   useEffect(() => {
     axios.get("http://localhost:5000/api/modeles")
@@ -68,7 +66,7 @@ function App() {
     if (selectedModele) {
       axios.get("http://localhost:5000/api/finitions")
         .then(response => {
-          const filteredFinitions = response.data.filter(f => f.modele === selectedModele);
+          const filteredFinitions = response.data.filter(f => f.NomModele === selectedModele);
           // si il y a plusieurs fois le même nom de finition, on ne garde que la première occurence
           const uniqueFinitions = [];
           filteredFinitions.forEach(finition => {
@@ -76,18 +74,41 @@ function App() {
               uniqueFinitions.push(finition);
             }
           });
-          // stocker les couleurs de la finition et du modele sélectionné
-          const couleur = filteredFinitions
-            .filter(finition => finition.modele === selectedModele)
-            .map(finition => finition.couleur);
           setFinitions(uniqueFinitions);
-          setCouleursFinitions(couleur);
         })
         .catch(() => setError("Erreur lors de la récupération des finitions."));
     }
   }, [selectedModele]);
 
-   
+  // Filtrer les couleurs en fonction de la finition sélectionnée et du modele sélectionné
+  // si la finition = "cuir Vague" ou "cuir Dunes" alors on affiche les motifs cuirs
+  useEffect(() => {
+    if (selectedFinition !== "Cuir" && selectedModele !== "Cuir") {
+      axios.get("http://localhost:5000/api/finitions")
+        .then(response => {
+          const filteredCouleurs = response.data.filter(c => c.NomFinition === selectedFinition);
+          // si il y a plusieurs fois le même nom de couleur, on ne garde que la première occurence
+          const uniqueCouleurs = [];
+          filteredCouleurs.forEach(couleur => {
+            if (!uniqueCouleurs.some(m => m['CouleurFinition'] === couleur['CouleurFinition'])) {
+              uniqueCouleurs.push(couleur);
+            }
+          });
+          setCouleursFinitions(uniqueCouleurs);
+        })
+        .catch(() => setError("Erreur lors de la récupération des couleurs."));
+    } else if (
+      selectedModele === "Cuir" &&
+      (selectedFinition === "Cuir Vagues" || selectedFinition === "Cuir Dunes")
+    ) {
+      axios.get("http://localhost:5000/api/motifs")
+        .then(response => {
+          const filteredMotifs = response.data.filter(motif => motif.Motif === selectedFinition.split(" ")[1]);
+          setCouleursCuirs(filteredMotifs);
+        })
+        .catch(() => setError("Erreur lors de la récupération des motifs cuirs."));
+    }
+  }, [selectedFinition, selectedModele]);
 
 
   useEffect(() => {
@@ -153,7 +174,8 @@ function App() {
                   setShowModeles(!showModeles);
                   setShowFormats(false);
                   setShowFinitions(false);
-                  setShowMotifsCuirs(false);
+                  setShowCouleurs(false);
+                  setShowCouleursCuirs(false);
                   setShowEquipements(false);
                 }}
               >
@@ -166,7 +188,8 @@ function App() {
                   setShowModeles(false);
                   setShowFormats(!showFormats);                  
                   setShowFinitions(false);
-                  setShowMotifsCuirs(false);
+                  setShowCouleurs(false);
+                  setShowCouleursCuirs(false);
                   setShowEquipements(false);
                 }}
               >
@@ -179,6 +202,8 @@ function App() {
                   setShowModeles(false);
                   setShowFormats(false);
                   setShowFinitions(!showFinitions);
+                  setShowCouleurs(false);
+                  setShowCouleursCuirs(false);
                   setShowEquipements(false);
                 }}
               >
@@ -192,7 +217,7 @@ function App() {
                   setShowFormats(false);
                   setShowFinitions(false);
                   setShowCouleurs(!showCouleurs);
-                  setShowMotifsCuirs(false);
+                  setShowCouleursCuirs(false);
                   setShowEquipements(false);
                 }}
               >
@@ -205,7 +230,8 @@ function App() {
                   setShowModeles(false);
                   setShowFormats(false);
                   setShowFinitions(false);
-                  setShowMotifsCuirs(false);
+                  setShowCouleurs(false);
+                  setShowCouleursCuirs(false);
                   setShowEquipements(!showEquipements);
                 }}
               >
@@ -221,14 +247,14 @@ function App() {
                 <Card.Title className="text-center">
                   {showModeles
                     ? "Modèles disponibles"
-                    : showEquipements
-                    ? "Equipements disponibles"
                     : showFormats
                     ? "Formats disponibles"
-                    : showMotifsCuirs
+                    : showCouleursCuirs
                     ? "Motifs Cuir disponibles"
                     : showCouleurs
                     ? "Couleurs disponibles"
+                    : showEquipements
+                    ? "Equipements disponibles"
                     : "Finitions disponibles"}
                 </Card.Title> 
                 <ListGroup style={{ maxHeight: '400px', overflowY: 'auto' }}>
@@ -267,16 +293,33 @@ function App() {
                           </ListGroup.Item>
                     ))}
                   {showCouleurs &&
-                    couleursFinitions.map((couleur, index) => (
-                      <ListGroup.Item
-                        key={index}
-                        action
-                        active={selectedCouleurFinition === couleur['CouleurFinition']}
-                        onClick={() => setSelectedCouleurFinition(couleur['CouleurFinition'])}
-                      >
-                        {couleur['CouleurFinition']}
-                      </ListGroup.Item>
-                    ))}
+                    (selectedModele === "Cuir" && (selectedFinition === "Cuir Vagues" || selectedFinition === "Cuir Dunes")
+                      ? couleursCuirs.map((couleur, index) => (
+                          <ListGroup.Item
+                            key={index}
+                            action
+                            active={selectedCouleurCuir === couleur['Couleur']}
+                            onClick={() => {
+                              setSelectedCouleurCuir(couleur['Couleur']);
+                              setSelectedCouleurFinition('');
+                            }}
+                          >
+                            {couleur['Couleur']}
+                          </ListGroup.Item>
+                        ))
+                      : couleursFinitions.map((couleur, index) => (
+                          <ListGroup.Item
+                            key={index}
+                            action
+                            active={selectedCouleurFinition === couleur['CouleurFinition']}
+                            onClick={() => {
+                              setSelectedCouleurFinition(couleur['CouleurFinition']);
+                              setSelectedCouleurCuir('');
+                            }}
+                          >
+                            {couleur['CouleurFinition']}
+                          </ListGroup.Item>
+                        )))}
                   {showEquipements &&
                     equipements.map((equipement, index) => (
                       <ListGroup.Item
@@ -321,13 +364,14 @@ function App() {
                 {selectedFormat && <Badge bg="secondary" className="me-2">{selectedFormat}</Badge>}
                 {selectedFinition && <Badge bg="success" className="me-2">{selectedFinition}</Badge>}
                 {selectedCouleurFinition && <Badge bg="warning" className="me-2">{selectedCouleurFinition}</Badge>}
+                {selectedCouleurCuir && <Badge bg="danger" className="me-2">{selectedCouleurCuir}</Badge>}
                 {selectedEquipement && <Badge bg="info" className="me-2">{selectedEquipement}</Badge>}
               </div>
             </Card.Body>
             <Card.Footer className="text-center">
               <Button
                 variant="success"
-                disabled={!selectedModele || !selectedFormat || !selectedFinition ||!selectedMotifCuir ||!selectedEquipement}
+                disabled={!selectedModele || !selectedFormat || !selectedFinition || !selectedCouleurFinition ||!selectedCouleurCuir ||!selectedEquipement}
               >
                 Ajouter au panier
               </Button>
@@ -338,7 +382,8 @@ function App() {
                   setSelectedModele('');
                   setSelectedFormat('');
                   setSelectedFinition('');
-                  setSelectedMotifCuir('');
+                  setSelectedCouleurFinition('');
+                  setSelectedCouleurCuir('');
                   setSelectedEquipement('');
                   setPreviewImage('');
                 }}
