@@ -78,6 +78,9 @@ button {
 .list-group-item {
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .list-group-item:hover {
@@ -90,7 +93,18 @@ button {
   font-weight: bold;
 }
 
-/* Badge Styles */
+.list-group-item img {
+  max-width: 150px;
+  max-height: 150px;
+  object-fit: cover;
+  margin-right: 10px;
+  border-radius: 5px;
+  vertical-align: middle;
+  margin-bottom: 10px;
+  flex: 0 0 calc(70% - 50px); /* Two buttons per row with spacing */
+  text-align: center;
+}
+
 .badge {
   font-size: 14px;
   padding: 8px 12px;
@@ -113,7 +127,6 @@ button {
 .fade-in {
   animation: fadeIn 0.5s ease-in-out;
 }
-
 
 /* Header Container */
 .header-container {

@@ -66,7 +66,7 @@ function App() {
 
   useEffect(() => {    
     if (selectedFinition) { 
-      axios.get("http://localhost:5000/api/finition")  
+      axios.get("http://localhost:5000/api/finitions")  
         .then(response => {
           const filteredTypeFinition = response.data.filter(f => f.NomFinition === selectedFinition);
           const uniqueTypeFinition = [];
@@ -76,6 +76,7 @@ function App() {
             }
           });
           setTypesFinitions(uniqueTypeFinition);
+          console.log(uniqueTypeFinition);
         })
         .catch(() => setError("Erreur lors de la récupération des types de finitions."));
     }
@@ -130,10 +131,12 @@ function App() {
     }
   }, [selectedFinition, selectedModele]);
 
-
+// faire un print des formats
   useEffect(() => {
     axios.get("http://localhost:5000/api/formats")
-      .then(response => setFormats(response.data))
+      .then(response => {
+        setFormats(response.data);
+      })
       .catch(() => setError("Erreur lors de la récupération des formats."));
   }, []);
 
@@ -208,6 +211,7 @@ function App() {
                   setShowModeles(false);
                   setShowFormats(!showFormats);                  
                   setShowFinitions(false);
+                  setSelectedTypeFinition(false);
                   setShowCouleurs(false);
                   setShowCouleursCuirs(false);
                   setShowEquipements(false);
@@ -222,6 +226,7 @@ function App() {
                   setShowModeles(false);
                   setShowFormats(false);
                   setShowFinitions(!showFinitions);
+                  setSelectedTypeFinition(false);
                   setShowCouleurs(false);
                   setShowCouleursCuirs(false);
                   setShowEquipements(false);
@@ -236,6 +241,22 @@ function App() {
                   setShowModeles(false);
                   setShowFormats(false);
                   setShowFinitions(false);
+                  setShowTypesFinitions(!showTypesFinitions);
+                  setShowCouleurs(false);
+                  setShowCouleursCuirs(false);
+                  setShowEquipements(false);
+                }}
+              >
+                {showTypesFinitions ? "Masquer les types de finitions" : "Voir les types de finitions"}
+              </Button>
+              <Button
+                variant="outline-primary"
+                className="w-100 mb-2"
+                onClick={() => {
+                  setShowModeles(false);
+                  setShowFormats(false);
+                  setShowFinitions(false);
+                  setSelectedTypeFinition(false);
                   setShowCouleurs(!showCouleurs);
                   setShowCouleursCuirs(false);
                   setShowEquipements(false);
@@ -250,6 +271,7 @@ function App() {
                   setShowModeles(false);
                   setShowFormats(false);
                   setShowFinitions(false);
+                  setSelectedTypeFinition(false);
                   setShowCouleurs(false);
                   setShowCouleursCuirs(false);
                   setShowEquipements(!showEquipements);
@@ -261,7 +283,7 @@ function App() {
           </Card>
 
           {/* Affichage conditionnel des listes */}
-          {(showModeles || showFormats || showFinitions || showCouleurs || showEquipements) && (
+          {(showModeles || showFormats || showFinitions || showTypesFinitions || showCouleurs || showEquipements) && (
             <Card className="shadow-sm">
               <Card.Body>
                 <Card.Title className="text-center">
@@ -269,6 +291,8 @@ function App() {
                     ? "Modèles disponibles"
                     : showFormats
                     ? "Formats disponibles"
+                     : showTypesFinitions
+                    ? "Types definitions disponibles"
                     : showCouleursCuirs
                     ? "Motifs Cuir disponibles"
                     : showCouleurs
@@ -290,17 +314,22 @@ function App() {
                       </ListGroup.Item>
                     ))}
                   {showFormats &&
-                    formats.map((format, index) => (
-                      <ListGroup.Item
-                        key={index}
-                        action
-                        active={selectedFormat === format['Item']} 
-                        onClick={() => setSelectedFormat(format['Item'])} 
-                      >
-                        {/* {index === 0 ? svg: null}  */}
-                        {format['Item']}
-                      </ListGroup.Item>
-                    ))}
+                    <div className="d-flex flex-wrap">
+                      {formats.map((format, index) => (
+                        <ListGroup.Item
+                          key={index}
+                          action
+                          active={selectedFormat === format['Item']} 
+                          onClick={() => setSelectedFormat(format['Item'])} 
+                        >
+                          <img
+                            src={`http://localhost:5000${format.image}`}
+                            alt={`Format ${index}`}
+                          />
+                        </ListGroup.Item>
+                      ))}
+                    </div>
+                  }
                   {showFinitions &&
                     finitions.map((finition, index) => (
                           <ListGroup.Item
@@ -312,6 +341,17 @@ function App() {
                             {finition['NomFinition']}
                           </ListGroup.Item>
                     ))}
+                    {showTypesFinitions &&
+                    typesFinitions.map((type, index) => (
+                      <ListGroup.Item
+                        key={index}
+                        action
+                        active={selectedTypeFinition === type['TypeFinition']}
+                        onClick={() => setSelectedTypeFinition(type['TypeFinition'])}
+                      >
+                        {type['TypeFinition']}
+                      </ListGroup.Item>
+                    ))}
                   {showCouleurs &&
                     (selectedModele === "Cuir" && (selectedFinition === "Cuir Vagues" || selectedFinition === "Cuir Dunes")
                       ? couleursCuirs.map((couleur, index) => (
@@ -321,7 +361,6 @@ function App() {
                             active={selectedCouleurCuir === couleur['Couleur']}
                             onClick={() => {
                               setSelectedCouleurCuir(couleur['Couleur']);
-                              setSelectedCouleurFinition('');
                             }}
                           >
                             {couleur['Couleur']}
@@ -334,7 +373,6 @@ function App() {
                             active={selectedCouleurFinition === couleur['CouleurFinition']}
                             onClick={() => {
                               setSelectedCouleurFinition(couleur['CouleurFinition']);
-                              setSelectedCouleurCuir('');
                             }}
                           >
                             {couleur['CouleurFinition']}
@@ -371,18 +409,25 @@ function App() {
                   className="img-fluid fade-in"
                   style={{ maxWidth: "70%", borderRadius: "10px" }}
                 />
+              ) : selectedFormat ? (
+                <img
+                  src={`http://localhost:5000${formats.find(f => f.Item === selectedFormat)?.image}`}
+                  alt="Format Sélectionné"
+                  className="img-fluid fade-in"
+                  style={{ maxWidth: "70%", borderRadius: "10px" }}
+                />
               ) : (
                 <div className="mt-3">
                   <Spinner animation="border" variant="primary" />
                   <p className="mt-2">Sélectionnez un modele, un format, une finition, des couleurs, des équipements</p>
                 </div>
               )}
-
               {/* Badges affichant la sélection */}
               <div className="mt-3">
                 {selectedModele && <Badge bg="primary" className="me-2">{selectedModele}</Badge>}
                 {selectedFormat && <Badge bg="secondary" className="me-2">{selectedFormat}</Badge>}
                 {selectedFinition && <Badge bg="success" className="me-2">{selectedFinition}</Badge>}
+                {selectedTypeFinition && <Badge bg="primary" className="me-2">{selectedTypeFinition}</Badge>}
                 {selectedCouleurFinition && <Badge bg="warning" className="me-2">{selectedCouleurFinition}</Badge>}
                 {selectedCouleurCuir && <Badge bg="danger" className="me-2">{selectedCouleurCuir}</Badge>}
                 {selectedEquipement && <Badge bg="info" className="me-2">{selectedEquipement}</Badge>}
@@ -391,7 +436,7 @@ function App() {
             <Card.Footer className="text-center">
               <Button
                 variant="success"
-                disabled={!selectedModele || !selectedFormat || !selectedFinition || !selectedCouleurFinition ||!selectedCouleurCuir ||!selectedEquipement}
+                disabled={!selectedModele || !selectedFormat || !selectedFinition || !selectedTypeFinition || !selectedCouleurFinition ||!selectedCouleurCuir ||!selectedEquipement}
               >
                 Ajouter au panier
               </Button>
@@ -402,6 +447,7 @@ function App() {
                   setSelectedModele('');
                   setSelectedFormat('');
                   setSelectedFinition('');
+                  setSelectedTypeFinition('');
                   setSelectedCouleurFinition('');
                   setSelectedCouleurCuir('');
                   setSelectedEquipement('');
